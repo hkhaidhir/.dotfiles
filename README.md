@@ -1,3 +1,3 @@
 # .dotfiles
 
-This is my config for neovim and terminal
+Install with stow using the script
