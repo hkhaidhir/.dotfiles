@@ -3,6 +3,13 @@ return {
 		"karb94/neoscroll.nvim",
 		config = function()
 			require("neoscroll").setup({})
+
+			local t = {}
+			-- Syntax: t[keys] = {function, {function arguments}}
+			t["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "170" } }
+			t["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "170" } }
+
+			require("neoscroll.config").set_mappings(t)
 		end,
 	},
 
@@ -14,7 +21,6 @@ return {
 			},
 			-- context = 15,
 		},
-		k,
 	},
 
 	{ "eandrju/cellular-automaton.nvim", event = "VeryLazy" },
@@ -39,6 +45,13 @@ return {
 			vim.keymap.set("n", "<leader>tp", function()
 				require("trouble").previous({ skip_groups = true, jump = true })
 			end)
+		end,
+	},
+
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 		end,
 	},
 
@@ -82,6 +95,86 @@ return {
 			end)
 			vim.keymap.set("n", "<C-s>", function()
 				harpoon:list():select(4)
+			end)
+		end,
+	},
+
+	{
+		"nvim-telescope/telescope.nvim",
+		tag = "0.1.4",
+		dependencies = { { "nvim-lua/plenary.nvim" } },
+		config = function()
+			local actions = require("telescope.actions")
+			local builtin = require("telescope.builtin")
+
+			require("telescope").setup({
+				defaults = {
+					mappings = {
+						n = {
+							["q"] = actions.close,
+						},
+					},
+				},
+			})
+
+			vim.keymap.set("n", "<leader>pf", function()
+				builtin.find_files({
+					no_ignore = false,
+					hidden = true,
+				})
+			end)
+			vim.keymap.set("n", "<C-p>", builtin.git_files, {})
+			vim.keymap.set("n", "<leader>ps", builtin.grep_string, {})
+			vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
+		end,
+	},
+
+	{
+
+		"folke/zen-mode.nvim",
+		config = function()
+			vim.keymap.set("n", "<leader>zz", function()
+				require("zen-mode").setup({
+					window = {
+						width = 90,
+						options = {},
+					},
+				})
+				require("zen-mode").toggle()
+				vim.wo.wrap = false
+				vim.wo.number = true
+				vim.wo.rnu = true
+			end)
+
+			vim.keymap.set("n", "<leader>zZ", function()
+				require("zen-mode").setup({
+					window = {
+						width = 80,
+						options = {},
+					},
+					plugins = {
+						twilight = { enabled = false },
+					},
+				})
+				require("zen-mode").toggle()
+				vim.wo.wrap = false
+				vim.wo.number = false
+				vim.wo.rnu = false
+				vim.opt.colorcolumn = "0"
+			end)
+
+			vim.keymap.set("n", "<leader>Z", function()
+				require("zen-mode").setup({
+					window = {
+						width = 80,
+						options = {},
+					},
+				})
+				require("zen-mode").toggle()
+				vim.wo.wrap = false
+				vim.wo.number = false
+				vim.wo.rnu = false
+				vim.opt.colorcolumn = "0"
 			end)
 		end,
 	},
